@@ -33,6 +33,7 @@ use OCA\Deck\Db\IPermissionMapper;
 use OCA\Deck\Db\User;
 use OCA\Deck\NoPermissionException;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IConfig;
 use OCP\IGroupManager;
@@ -42,6 +43,8 @@ use OCP\Share\IManager;
 
 class PermissionService {
 
+	/** @var CirclesService */
+	private $circlesService;
 	/** @var BoardMapper */
 	private $boardMapper;
 	/** @var AclMapper */
@@ -61,11 +64,11 @@ class PermissionService {
 	/** @var array */
 	private $users = [];
 
-	private $circlesEnabled = false;
 	private $boardCache;
 
 	public function __construct(
 		ILogger $logger,
+		CirclesService $circlesService,
 		AclMapper $aclMapper,
 		BoardMapper $boardMapper,
 		IUserManager $userManager,
@@ -74,6 +77,7 @@ class PermissionService {
 		IConfig $config,
 		$userId
 	) {
+		$this->circlesService = $circlesService;
 		$this->aclMapper = $aclMapper;
 		$this->boardMapper = $boardMapper;
 		$this->logger = $logger;
@@ -84,9 +88,6 @@ class PermissionService {
 		$this->userId = $userId;
 
 		$this->boardCache = new CappedMemoryCache();
-
-		$this->circlesEnabled = \OC::$server->getAppManager()->isEnabledForUser('circles') &&
-			(version_compare(\OC::$server->getAppManager()->getAppVersion('circles'), '0.17.1') >= 0);
 	}
 
 	/**
@@ -210,10 +211,9 @@ class PermissionService {
 				return $acl->getPermission($permission);
 			}
 
-			if ($this->circlesEnabled && $acl->getType() === Acl::PERMISSION_TYPE_CIRCLE) {
+			if ($this->circlesService->isCirclesEnabled() && $acl->getType() === Acl::PERMISSION_TYPE_CIRCLE) {
 				try {
-					$member = \OCA\Circles\Api\v1\Circles::getMember($acl->getParticipant(), $this->userId, 1, true);
-					return $member->getLevel() >= Member::LEVEL_MEMBER && $acl->getPermission($permission);
+					return $this->circlesService->isUserInCircle($acl->getParticipant(), $userId) && $acl->getPermission($permission);
 				} catch (\Exception $e) {
 					$this->logger->info('Member not found in circle that was accessed. This should not happen.');
 				}
@@ -278,7 +278,7 @@ class PermissionService {
 				}
 			}
 
-			if ($this->circlesEnabled && $acl->getType() === Acl::PERMISSION_TYPE_CIRCLE) {
+			if ($this->circlesService->isCirclesEnabled() && $acl->getType() === Acl::PERMISSION_TYPE_CIRCLE) {
 				try {
 					$circle = \OCA\Circles\Api\v1\Circles::detailsCircle($acl->getParticipant(), true);
 					if ($circle === null) {
@@ -286,7 +286,11 @@ class PermissionService {
 						continue;
 					}
 
-					foreach ($circle->getMembers() as $member) {
+					foreach ($circle->getInheritedMembers() as $member) {
+						if ($member->getUserType() !== 1 || $member->getLevel() >= Member::LEVEL_MEMBER) {
+							// deck currently only supports user members in circles
+							continue;
+						}
 						$user = $this->userManager->get($member->getUserId());
 						if ($user === null) {
 							$this->logger->info('No user found for circle member ' . $member->getUserId());
@@ -304,6 +308,10 @@ class PermissionService {
 	}
 
 	public function canCreate() {
+		if ($this->userId === null) {
+			return false;
+		}
+
 		$groups = $this->getGroupLimitList();
 		if (count($groups) === 0) {
 			return true;

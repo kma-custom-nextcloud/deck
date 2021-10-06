@@ -230,16 +230,18 @@ class CardMapper extends QBMapper implements IPermissionMapper {
 		return $this->findEntities($qb);
 	}
 
-	public function findAssignedCards($boardId, $username) {
+	public function findToMeOrNotAssignedCards($boardId, $username) {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('c.*')
 			->from('deck_cards', 'c')
 			->innerJoin('c', 'deck_stacks', 's', 's.id = c.stack_id')
 			->innerJoin('s', 'deck_boards', 'b', 'b.id = s.board_id')
-			->innerJoin('c', 'deck_assigned_users', 'u', 'c.id = u.card_id')
+			->leftJoin('c', 'deck_assigned_users', 'u', 'c.id = u.card_id')
 			->where($qb->expr()->eq('s.board_id', $qb->createNamedParameter($boardId, IQueryBuilder::PARAM_INT)))
-			->andWhere($qb->expr()->eq('u.participant', $qb->createNamedParameter($username, IQueryBuilder::PARAM_STR)))
-			->andWhere($qb->expr()->eq('u.type', $qb->createNamedParameter(Acl::PERMISSION_TYPE_USER, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->orX(
+				$qb->expr()->eq('u.participant', $qb->createNamedParameter($username, IQueryBuilder::PARAM_STR)),
+				$qb->expr()->isNull('u.participant'))
+			)
 			// Filter out archived/deleted cards and board
 			->andWhere($qb->expr()->eq('c.archived', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL)))
 			->andWhere($qb->expr()->eq('c.deleted_at', $qb->createNamedParameter(0, IQueryBuilder::PARAM_INT)))
@@ -544,10 +546,10 @@ class CardMapper extends QBMapper implements IPermissionMapper {
 		return ($row['owner'] === $userId);
 	}
 
-	public function findBoardId($cardId): ?int {
+	public function findBoardId($id): ?int {
 		$sql = 'SELECT id FROM `*PREFIX*deck_boards` WHERE `id` IN (SELECT board_id FROM `*PREFIX*deck_stacks` WHERE id IN (SELECT stack_id FROM `*PREFIX*deck_cards` WHERE id = ?))';
 		$stmt = $this->db->prepare($sql);
-		$stmt->bindParam(1, $cardId, \PDO::PARAM_INT);
+		$stmt->bindParam(1, $id, \PDO::PARAM_INT);
 		$stmt->execute();
 		return $stmt->fetchColumn() ?? null;
 	}

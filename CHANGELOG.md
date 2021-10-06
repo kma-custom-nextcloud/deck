@@ -1,50 +1,62 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 1.4.5
+## 1.5.3
+
+### Fied
+
+- #3317 Additional check for stacks
+
+
+## 1.5.2
 
 ### Fixed
 
-- #3318 Additional check for stacks
+- #3300 Fix print style issues
+- #3303 Delete file shares through attachments API
+- #3306 Return false instead of throwing when getting calendar setting
 
-
-## 1.4.4
-
-### Fixed
-
-- #3301 Fix print style issues
-- #3307 Return false instead of throwing when getting calendar setting
-- #3227 Additional circle level check
-- #3304 Delete file shares through attachments API
-
-## 1.4.3 - 2021-07-09
+## 1.5.1 - 2021-09-03
 
 ### Fixed
 
-* [#3143](https://github.com/nextcloud/deck/pull/3143) Always pass user id in share provider
-* [#3153](https://github.com/nextcloud/deck/pull/3153) Only offer stack creation in emptycontent with proper permissions
-* [#3164](https://github.com/nextcloud/deck/pull/3164) Always log generic exceptions
-* [#3169](https://github.com/nextcloud/deck/pull/3169) Reduce duplicate queries when fetching user boards an permissions
+- #3224 Move circle checks to a unified service and improve member checks
+- #3231 Check for null value to avoid TypeError in the group manager
+- #3264 Defer obtaining the user session in the config service
 
 
-## 1.4.2 - 2021-05-03
+## 1.5.0 - 2021-07-09
 
-### Fixed
+### Added
 
-* [#3030](https://github.com/nextcloud/deck/pull/3030) Proper error handling when fetching comments fails
-* [#3031](https://github.com/nextcloud/deck/pull/3031) Allow searching for filters without a query to match all that have a given filter set
-* [#3039](https://github.com/nextcloud/deck/pull/3039) Catch any error during circle detail fetching
-* [#3040](https://github.com/nextcloud/deck/pull/3040) Get attachment from the user node instead of the share source
-
-## 1.4.1 - 2021-04-20
+* Nextcloud 22 compatibility
+* [#3105](https://github.com/nextcloud/deck/pull/3105) Compatibility with Cirlces changes in 22
+* [#3147](https://github.com/nextcloud/deck/pull/3147) Add card button to the dashboard widget @jakobroehrl
+* [#2854](https://github.com/nextcloud/deck/pull/2854) Add card button in card overview @jakobroehrl
+* [#3078](https://github.com/nextcloud/deck/pull/3078) Show on shared boards unassigned cards to all users @jakobroehrl
 
 ### Fixed
 
-* [#2984](https://github.com/nextcloud/deck/pull/2984) Fix codemirror description width
-* [#2990](https://github.com/nextcloud/deck/pull/2990) Fix unified comments search with postgres
-* [#2994](https://github.com/nextcloud/deck/pull/2994) Remove notification on unshare and add type hints
-* [#3006](https://github.com/nextcloud/deck/pull/3006) Only import debounce
-* [#3008](https://github.com/nextcloud/deck/pull/3008) Do not query the lookupserver when looking for sharees
+* [#2935](https://github.com/nextcloud/deck/pull/2935) Rich object string parameters for notifications @nickvergessen
+* [#2950](https://github.com/nextcloud/deck/pull/2950) Remove notification on unshare and add type hints
+* [#2983](https://github.com/nextcloud/deck/pull/2983) Fix codemirror description width
+* [#2989](https://github.com/nextcloud/deck/pull/2989) Fix unified comments search with postgres
+* [#3005](https://github.com/nextcloud/deck/pull/3005) Do not query the lookupserver when looking for sharees
+* [#3011](https://github.com/nextcloud/deck/pull/3011) L10n: Spelling unification @Valdnet
+* [#3014](https://github.com/nextcloud/deck/pull/3014) Proper error handling when fetching comments fails
+* [#3016](https://github.com/nextcloud/deck/pull/3016) Allow searching for filters without a query to match all that have a given filter set
+* [#3021](https://github.com/nextcloud/deck/pull/3021) L10n: Add word "Card" @Valdnet
+* [#3025](https://github.com/nextcloud/deck/pull/3025) Show comment counter and highlight if unread comments are available
+* [#3036](https://github.com/nextcloud/deck/pull/3036) Add link to migration tool for Trello @maxammann
+* [#3037](https://github.com/nextcloud/deck/pull/3037) Catch any error during circle detail fetching
+* [#3038](https://github.com/nextcloud/deck/pull/3038) Get attachment from the user node instead of the share source
+* [#3092](https://github.com/nextcloud/deck/pull/3092) Refactor update to have proper order of optional parameters
+* [#3113](https://github.com/nextcloud/deck/pull/3113) Use new viewer syntax with destructuring object @azul
+* [#3142](https://github.com/nextcloud/deck/pull/3142) Always pass user id in share provider
+* [#3152](https://github.com/nextcloud/deck/pull/3152) Only offer stack creation in emptycontent with proper permissions
+* [#3165](https://github.com/nextcloud/deck/pull/3165) Always log generic exceptions
+* [#3168](https://github.com/nextcloud/deck/pull/3168) Reduce duplicate queries when fetching user boards an permissions
+
 
 
 ## 1.4.0 - 2021-04-13
@@ -81,15 +93,15 @@ All notable changes to this project will be documented in this file.
 ## 1.3.0-beta2
 
 ### Fixed
-* [#2700](https://github.com/nextcloud/deck/pull/2700) Attempt to copy file on dropping it to deck @juliushaertl
-* [#2701](https://github.com/nextcloud/deck/pull/2701) Fix uploading files by drag and drop @juliushaertl
+* [#2700](https://github.com/nextcloud/deck/pull/2700) Attempt to copy file on dropping it to deck
+* [#2701](https://github.com/nextcloud/deck/pull/2701) Fix uploading files by drag and drop
 * [#2707](https://github.com/nextcloud/deck/pull/2707) L10n: Change to a capital letter @Valdnet
 * [#2712](https://github.com/nextcloud/deck/pull/2712) Docs: Fix table in section "GET /api/v1.0/config" @das-g
-* [#2716](https://github.com/nextcloud/deck/pull/2716) Remove repair step which is no longer needed as we cleanup properly @juliushaertl
+* [#2716](https://github.com/nextcloud/deck/pull/2716) Remove repair step which is no longer needed as we cleanup properly
 * [#2723](https://github.com/nextcloud/deck/pull/2723) Pad random color with leading zeroes @PVince81
 * [#2729](https://github.com/nextcloud/deck/pull/2729) Remove invalid activity parameters @nickvergessen
 * [#2750](https://github.com/nextcloud/deck/pull/2750) Fix deck activity emails not being translated @nickvergessen
-* [#2751](https://github.com/nextcloud/deck/pull/2751) Properly set author for activity events that are triggered by cron @juliushaertl
+* [#2751](https://github.com/nextcloud/deck/pull/2751) Properly set author for activity events that are triggered by cron
 
 
 ## 1.2.2 - 2020-11-24
@@ -198,31 +210,31 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 
-* [#2116](https://github.com/nextcloud/deck/pull/2116) Fix navigation layout issues @juliushaertl
-* [#2118](https://github.com/nextcloud/deck/pull/2118) Use proper parameter when handling attachments @juliushaertl
+* [#2116](https://github.com/nextcloud/deck/pull/2116) Fix navigation layout issues
+* [#2118](https://github.com/nextcloud/deck/pull/2118) Use proper parameter when handling attachments
 
 ## 1.0.4 - 2020-06-26
 
 ### Fixed
 
-* [#2062](https://github.com/nextcloud/deck/pull/2062) Fix saving card description after toggling checkboxes @juliushaertl
+* [#2062](https://github.com/nextcloud/deck/pull/2062) Fix saving card description after toggling checkboxes
 * [#2065](https://github.com/nextcloud/deck/pull/2065) Adding CSS rule for Markdown Blockquotes @reox
-* [#2059](https://github.com/nextcloud/deck/pull/2059) Fix fetching attachments on card change @juliushaertl
-* [#2060](https://github.com/nextcloud/deck/pull/2060) Use mixing for relative date in card sidebar @juliushaertl
+* [#2059](https://github.com/nextcloud/deck/pull/2059) Fix fetching attachments on card change
+* [#2060](https://github.com/nextcloud/deck/pull/2060) Use mixing for relative date in card sidebar
 
 
 ## 1.0.3 - 2020-06-19
 
 ### Fixed
 
-* [#2019](https://github.com/nextcloud/deck/pull/2019) Remove old global css rule @juliushaertl
-* [#2020](https://github.com/nextcloud/deck/pull/2020) Fix navigation issue with leftover nodes @juliushaertl
-* [#2021](https://github.com/nextcloud/deck/pull/2021) Fix description issues @juliushaertl
-* [#2022](https://github.com/nextcloud/deck/pull/2022) Fix replyto issues with the comments API @juliushaertl
-* [#2027](https://github.com/nextcloud/deck/pull/2027) Allow to unassign current user from card @juliushaertl
+* [#2019](https://github.com/nextcloud/deck/pull/2019) Remove old global css rule
+* [#2020](https://github.com/nextcloud/deck/pull/2020) Fix navigation issue with leftover nodes
+* [#2021](https://github.com/nextcloud/deck/pull/2021) Fix description issues
+* [#2022](https://github.com/nextcloud/deck/pull/2022) Fix replyto issues with the comments API
+* [#2027](https://github.com/nextcloud/deck/pull/2027) Allow to unassign current user from card
 * [#2029](https://github.com/nextcloud/deck/pull/2029) Fix wording : stack -> list @cloud2018
-* [#2032](https://github.com/nextcloud/deck/pull/2032) Force order by id as second sorting key @juliushaertl
-* [#2045](https://github.com/nextcloud/deck/pull/2045) Improve label styling @juliushaertl
+* [#2032](https://github.com/nextcloud/deck/pull/2032) Force order by id as second sorting key
+* [#2045](https://github.com/nextcloud/deck/pull/2045) Improve label styling
 * [#2010](https://github.com/nextcloud/deck/pull/2010) User documentation fixes @Nyco
 * [#1998](https://github.com/nextcloud/deck/pull/1998) Add Checklist explaination to the doc @4rnoP
 
